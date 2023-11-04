@@ -92,12 +92,16 @@ func (w World) String() string {
 func (w *World) Neighbors(x, y int) int {
 	n := 0
 
-	for i := y - 1; i <= y+1; i++ {
+	for i := y - 1; i <= y+1; {
 		if i < 0 {
 			i = len(w.Cells) - 1
 		}
 
-		for j := x - 1; j <= x+1; j++ {
+		for j := x - 1; j <= x+1; {
+			if j == x && i == y {
+				j++
+				continue
+			}
 			if j < 0 {
 				j = len(w.Cells[i]) - 1
 			}
@@ -110,6 +114,8 @@ func (w *World) Neighbors(x, y int) int {
 			if j == 0 && x == len(w.Cells[i])-1 {
 				break
 			}
+
+			j++
 		}
 
 		if i == len(w.Cells)-1 {
@@ -119,7 +125,25 @@ func (w *World) Neighbors(x, y int) int {
 		if i == 0 && y == len(w.Cells)-1 {
 			break
 		}
+
+		i++
 	}
+
+	// rows, cols := len(w.Cells), len(w.Cells[0])
+
+	// for i := y - 1; i <= y+1; i++ {
+	// 	yPos := (i + rows) % rows
+	// 	for j := x - 1; j <= x+1; j++ {
+	// 		if j == x && i == y {
+
+	// 			continue
+	// 		}
+	// 		xPos := (j + cols) % cols
+	// 		if (xPos != x || yPos != y) && w.Cells[yPos][xPos] {
+	// 			n++
+	// 		}
+	// 	}
+	// }
 
 	return n
 }
@@ -128,10 +152,10 @@ func main() {
 	w := World{}
 
 	w.LoadState("statefile.txt")
-	// str := w.String()
-	n := w.Neighbors(0, 0)
+	str := w.String()
+	fmt.Println(str)
 
-	// fmt.Println(str)
+	n := w.Neighbors(0, 0)
 	fmt.Println(n)
 }
 
